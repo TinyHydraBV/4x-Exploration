@@ -24,8 +24,10 @@ public class HexMap : MonoBehaviour
     [HideInInspector]
     public int numColumns; //don't use width because width of base hex != 1
 
-    public void GenerateMap()
+    virtual public void GenerateMap()
     {
+        //base map generation
+
         //generate our number of rows and columns for the map based on selected map size
         if(myMapSize == mapSize.Tiny)
         {
@@ -80,7 +82,10 @@ public class HexMap : MonoBehaviour
                 //the hex game object should know about itself and the map to pass to the HexComponent to move itself based on this info
                 hexGO.GetComponent<HexComponent>().Hex = h;
                 hexGO.GetComponent<HexComponent>().HexMap = this;
-
+                
+                //show debug hex coordinates
+                hexGO.GetComponentInChildren<TextMesh>().text = string.Format("{0}, {1}", column, row); 
+                
                 //grab GameObject Mesh Renderer materials slot
                 MeshRenderer mr = hexGO.GetComponentInChildren<MeshRenderer>();
 
@@ -98,6 +103,6 @@ public class HexMap : MonoBehaviour
     //Update is called once per frame
     //void Update()
     //{
-        
+
     //}
 }

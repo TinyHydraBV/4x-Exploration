@@ -345,9 +345,9 @@ MonoBehaviour:
   - {fileID: 2100000, guid: bcac276041aa85449bdaa2af394f5bed, type: 2}
   - {fileID: 2100000, guid: 27c6f89a6e4330a4c80b6d41a2be210e, type: 2}
   - {fileID: 2100000, guid: 3a8627bbc63488a439e5e50165805d0f, type: 2}
+  myMapSize: 0
   numRows: 30
   numColumns: 60
-  mySize: 0
 --- !u!4 &1510538277
 Transform:
   m_ObjectHideFlags: 0
