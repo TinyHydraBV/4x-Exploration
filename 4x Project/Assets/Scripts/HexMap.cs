@@ -15,11 +15,39 @@ public class HexMap : MonoBehaviour
     public Material[] HexMaterials;
 
     //define map dimensions
+    public enum mapSize { Tiny, Small, Standard, Huge };
+    public mapSize myMapSize;
+
+    [HideInInspector]
     public int numRows;
+
+    [HideInInspector]
     public int numColumns; //don't use width because width of base hex != 1
-    public void GenerateMap() 
+
+    public void GenerateMap()
     {
-        //generate our hexes for the map
+        //generate our number of rows and columns for the map based on selected map size
+        if(myMapSize == mapSize.Tiny)
+        {
+            numColumns = 60;
+            numRows = 38;
+        }
+        else if (myMapSize == mapSize.Small)
+        {
+            numColumns = 74;
+            numRows = 46;
+        }
+        else if (myMapSize == mapSize.Huge)
+        {
+            numColumns = 96;
+            numRows = 60;
+        }
+        else
+        {
+            //standard map size
+            numColumns = 84;
+            numRows = 54;
+        }
 
         //for number of columns
         for (int column = 0; column < numColumns; column++) 
@@ -44,8 +72,6 @@ public class HexMap : MonoBehaviour
                 // fourth parameter (the parent) is optional
                 GameObject hexGO = (GameObject) Instantiate(
                     HexPrefab,
-                    //new Vector3(column, 0, row), replaced by hex position, h.Position(), from Hex.cs
-                    //h.Position(), needed a variant that sets the object in the right place based on where the camera is on Update()
                     pos,
                     Quaternion.identity,
                     this.transform // pass the HexMap's transform as the parent of the newly created Hexes (everything will be a child of hex map)
@@ -70,8 +96,8 @@ public class HexMap : MonoBehaviour
     }
 
     //Update is called once per frame
-    void Update()
-    {
+    //void Update()
+    //{
         
-    }
+    //}
 }
