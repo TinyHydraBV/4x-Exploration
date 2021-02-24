@@ -26,7 +26,14 @@ public class Hex
     public readonly int R; // Row
     public readonly int S; // Some Sum
 
+    //setup WIDTH MULTIPLIER as a constant rather than doing that square root operation with each instantiation
     readonly float WIDTH_MULTIPLIER = Mathf.Sqrt(3) / 2;
+
+    //hard code radius of a hex (change later)
+    float radius = 1f;
+    bool allowWrapEastWest = true;
+    //bool allowWrapNorthSouth = false;
+        // this would be hard to implement as you would need to start going down after crossing the North pole, and vice versa.
 
     /// <summary>
     /// Returns the worldspace position of this hex
@@ -34,20 +41,73 @@ public class Hex
     /// <returns></returns>
     public Vector3 Position()
     {
-        float radius = 1f;
-        float height = radius * 2;
-        //setup WIDTH MULTIPLIER as a constant above rather than doing that square root operation with each instantiation
-        float width = WIDTH_MULTIPLIER * height;
-
-        //define spacing between tiles
-        float vert = height * 0.75f;
-        float horiz = width;
-
-
         return new Vector3(
-            horiz * (this.Q + this.R/2f), //horizontal spacing multiplied by a combination of what Column we're in plus half the Row (drawing rows on a diagonal  between z * x)
+            HexHorizontalSpacing() * (this.Q + this.R/2f), //horizontal spacing multiplied by a combination of what Column we're in plus half the Row (drawing rows on a diagonal  between z * x)
             0,
-            vert * this.R //vertical spacing multilied by the Row we are in
+            HexVerticalSpacing() * this.R //vertical spacing multilied by the Row we are in
         );
+    }
+
+    public float HexHeight()
+    {
+        return radius * 2;
+    }
+
+    public float HexWidth()
+    {
+        return WIDTH_MULTIPLIER * HexHeight();
+    }
+
+    //define spacing between tiles
+    public float HexVerticalSpacing()
+    {
+        return HexHeight() * 0.75f;
+    }
+    public float HexHorizontalSpacing()
+    {
+        return HexWidth();
+    }
+
+    public Vector3 PositionRelativeToCamera( Vector3 cameraPosition, float numRows, float numColumns) 
+    {
+        //float mapHeight = numRows * HexVerticalSpacing();
+            // no north south wrapping
+            // if we wanted this, use same code as follows up test height rather than width
+
+        float mapWidth = numColumns * HexHorizontalSpacing();
+        // how far off from the camera's position are we relative to map width total
+            // we want howManyWidthsFromCamera to be btwn -0.5 and 0.5
+        Vector3 position = Position();
+        if(allowWrapEastWest == true)
+        {
+            float howManyWidthsFromCamera = (position.x - cameraPosition.x) / mapWidth;
+            if (Mathf.Abs(howManyWidthsFromCamera) <= 0.5f)
+            {
+                //we're good
+                return position;
+            }
+            //offset things 
+            // if we are at 0.6, we want to be at -0.4
+            // if we are at 0.8, we want to be at -0.2
+            // if we are at 2.2, we want to be at 0.2
+            // if we are at 2.8, we want to be at -0.2
+            // we never want to be more than 0.5 away in either direction.
+
+            if (howManyWidthsFromCamera > 0)
+            {
+                howManyWidthsFromCamera += 0.5f;
+            }
+            else
+            {
+                howManyWidthsFromCamera -= 0.5f;
+            }
+
+            // how much of a correction do we have to make (how many widths cast to int)
+            int howManyWidthsToFix = (int)howManyWidthsFromCamera;
+
+            position.x -= howManyWidthsToFix * mapWidth;
+        }
+        
+        return position;
     }
 }

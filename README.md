@@ -9,7 +9,7 @@ In Progress:
 To Do:
 2. Add turn based mechanics
 3. Add units that can move through the map interacting with each other and the world
-4. Add cityies and improvement management
+4. Add cities and improvements, and the ability to manage these
 5. Add AI characters with chat (using ink?)
 6. Add syncronous turn multiplayer
 
