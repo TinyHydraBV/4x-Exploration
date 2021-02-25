@@ -26,11 +26,17 @@ public class Hex
     public readonly int R; // Row
     public readonly int S; // Some Sum
 
+    //Data for map generation and in-game effects
+    public float Elevation;
+    public float Moisture;
+
     //setup WIDTH MULTIPLIER as a constant rather than doing that square root operation with each instantiation
     readonly float WIDTH_MULTIPLIER = Mathf.Sqrt(3) / 2;
 
     //hard code radius of a hex (change later)
     float radius = 1f;
+
+    //TODO: Link this up to HexMap.cs version
     bool allowWrapEastWest = true;
     //bool allowWrapNorthSouth = false;
         // this would be hard to implement as you would need to start going down after crossing the North pole, and vice versa.
@@ -109,5 +115,17 @@ public class Hex
         }
         
         return position;
+    }
+
+    public static float Distance(Hex a, Hex b)
+    {
+        //FIXME: Wrapping
+        return
+            // the largest difference will be the distance between two hexes
+            Mathf.Max(
+                Mathf.Abs(a.Q - b.Q),
+                Mathf.Abs(a.R - b.R),
+                Mathf.Abs(a.S - b.S)
+            );
     }
 }
