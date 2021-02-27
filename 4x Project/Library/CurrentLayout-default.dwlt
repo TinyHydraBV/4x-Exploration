@@ -19,9 +19,9 @@ MonoBehaviour:
     width: 1536
     height: 780.8
   m_ShowMode: 4
-  m_Title: Game
+  m_Title: Scene
   m_RootView: {fileID: 4}
-  m_MinSize: {x: 875, y: 300}
+  m_MinSize: {x: 875, y: 542}
   m_MaxSize: {x: 10000, y: 10000}
   m_Maximized: 1
 --- !u!114 &2
@@ -74,7 +74,7 @@ MonoBehaviour:
   m_MinSize: {x: 333, y: 271}
   m_MaxSize: {x: 14003, y: 10021}
   vertical: 0
-  controlID: 19
+  controlID: 83
 --- !u!114 &4
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -97,7 +97,7 @@ MonoBehaviour:
     y: 0
     width: 1536
     height: 781
-  m_MinSize: {x: 875, y: 300}
+  m_MinSize: {x: 875, y: 542}
   m_MaxSize: {x: 10000, y: 10000}
   m_UseTopView: 1
   m_TopViewHeight: 30
@@ -170,10 +170,10 @@ MonoBehaviour:
     y: 30
     width: 1536
     height: 731
-  m_MinSize: {x: 679, y: 492}
-  m_MaxSize: {x: 18004, y: 14042}
+  m_MinSize: {x: 678, y: 492}
+  m_MaxSize: {x: 18003, y: 14042}
   vertical: 0
-  controlID: 48
+  controlID: 108
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -198,7 +198,7 @@ MonoBehaviour:
   m_MinSize: {x: 403, y: 492}
   m_MaxSize: {x: 14003, y: 14042}
   vertical: 1
-  controlID: 49
+  controlID: 109
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -223,7 +223,7 @@ MonoBehaviour:
   m_MinSize: {x: 403, y: 221}
   m_MaxSize: {x: 8003, y: 4021}
   vertical: 0
-  controlID: 50
+  controlID: 110
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -324,8 +324,8 @@ MonoBehaviour:
     y: 0
     width: 330
     height: 731
-  m_MinSize: {x: 276, y: 71}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 21}
   m_Panes:
   - {fileID: 21}
@@ -450,9 +450,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 
-      m_LastClickedID: 0
-      m_ExpandedIDs: 50fbffff
+      m_SelectedIDs: 183a0000
+      m_LastClickedID: 14872
+      m_ExpandedIDs: ead5f9ff1ad6f9ff4ad6f9ff62d6f9ff9ed6f9ff06dbf9ff5ae4f9ff62e8f9ff2af9f9ff5af9f9ffda00faffb2acfaffd4b2faffacb3faff78b4faffbcc1faff4cd7faff54eafaffa47bfbff46fbffff183a0000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -603,9 +603,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 6.5777397, y: -6.1523266, z: 34.59991}
+    m_Target: {x: -10.656063, y: 5.2720456, z: 15.229943}
     speed: 2
-    m_Value: {x: 6.5777397, y: -6.1523266, z: 34.59991}
+    m_Value: {x: -10.656063, y: 5.2720456, z: 15.229943}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -652,13 +652,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: 0.37784344, y: -0.2706516, z: 0.11650504, w: 0.87773633}
+    m_Target: {x: 0.21869154, y: -0.015222442, z: 0.0034061463, w: 0.9756817}
     speed: 2
-    m_Value: {x: 0.3778411, y: -0.27064994, z: 0.11650432, w: 0.8777309}
+    m_Value: {x: 0.21869376, y: -0.013758738, z: 0.0030780684, w: 0.97569174}
   m_Size:
-    m_Target: 27.996445
+    m_Target: 9.929892
     speed: 2
-    m_Value: 27.996445
+    m_Value: 9.929892
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -748,22 +748,22 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets/Materials/Terrain
+    - Assets/Prefabs
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
   m_StartGridSize: 16
   m_LastFolders:
-  - Assets/Materials/Terrain
+  - Assets/Prefabs
   m_LastFoldersGridSize: 16
   m_LastProjectPath: D:\TinyHydra_Github\4x-Exploration\4x Project
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: 883a0000
-    m_LastClickedID: 14984
-    m_ExpandedIDs: 000000007a3a00007e3a000000ca9a3b
+    m_SelectedIDs: 903a0000
+    m_LastClickedID: 14992
+    m_ExpandedIDs: 00000000883a00008c3a000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -791,7 +791,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000007a3a0000
+    m_ExpandedIDs: 00000000883a0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -818,22 +818,22 @@ MonoBehaviour:
   m_ListAreaState:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 0
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c6230000048fe8ff9cd402002494000060d300001ad20000f65cfdff18180100a83602009435070008e900009e940000d4fb00005cfc0000daff00008a9500007eac010026e10000588e000084d8010086950000d049f5ff869d00003aa60600eafb000024dce8ff7e0ff8ffb0dbf5ffa804f3fffc0d0b00cc630b002e830000ac190100a21d0100241c0100d41f0800b2230100d2280200a0240200cc08f9ff4a67f1ffac2d0100e44d0c00782df8ffa0ef01008851010024f20a000a890100220f02001ebd000022470100224901009a3b010016500100c4490100ca49010084510100d2550100cc8b0200f27f02001ed90000e6a505000212010004ae0000bcae000088c60000561b0e00f89001005ed100004c170c001ca20c00bad2ffffa4d60000c2420e00e21ffbff64810000168e0100006c03009c4b0400fc6b03007a4c040014c3020000000000008e00001ce3f9ff00db00000282f8ff586a0400da0702003c7806007a86f2ff225e07000a59030034250700346a050058690000feb11000fcb110008c27ecff22f40f002cf10f0012e8d1fff25a0100ba3a0000aa3a0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
-      m_Name: 
-      m_OriginalName: 
+      m_Name: JunglePrefab
+      m_OriginalName: JunglePrefab
       m_EditFieldRect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 0
         height: 0
-      m_UserData: 0
+      m_UserData: 15066
       m_IsWaitingForDelay: 0
       m_IsRenaming: 0
-      m_OriginalEventType: 11
+      m_OriginalEventType: 0
       m_IsRenamingFilename: 1
       m_ClientGUIView: {fileID: 12}
     m_CreateAssetUtility:

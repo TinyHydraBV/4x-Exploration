@@ -17,6 +17,11 @@ public class HexMap : MonoBehaviour
     public Mesh MeshHill;
     public Mesh MeshMountain;
 
+    //forest/jungle
+    //      TODO: make seperate jungle mesh
+    public GameObject ForestPrefab;
+    public GameObject JunglePrefab;
+
     //Fixed Material Types (replacing array)
     public Material MatOcean;
     public Material MatPlains;
@@ -197,17 +202,29 @@ public class HexMap : MonoBehaviour
                 MeshFilter mf = hexGO.GetComponentInChildren<MeshFilter>();
 
                 //set moisture level
-                if (h.Elevation >= flatHeight)
+                if (h.Elevation >= flatHeight && h.Elevation < mountainHeight)
                 {
                     if (h.Moisture >= MoistureJungle)
                     {
                         mr.material = MatGrasslands;
-                        //TODO: Spawn Jungles
+                        //Spawn jungle adjusting for hill height
+                        Vector3 p = hexGO.transform.position;
+                        if(h.Elevation >= hillHeight)
+                        {
+                            p.y += 0.25f;
+                        }
+                        GameObject.Instantiate(JunglePrefab, p, Quaternion.identity, hexGO.transform);
                     }
                     else if (h.Moisture >= MoistureForest)
                     {
                         mr.material = MatGrasslands;
-                        //TODO: Spawn forests
+                        //Spawn forests adjusting for hill height
+                        Vector3 p = hexGO.transform.position;
+                        if (h.Elevation >= hillHeight)
+                        {
+                            p.y += 0.25f;
+                        }
+                        GameObject.Instantiate(ForestPrefab, p, Quaternion.identity, hexGO.transform);
                     }
                     else if (h.Moisture >= MoistureGrasslands)
                     {

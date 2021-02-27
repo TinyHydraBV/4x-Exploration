@@ -412,6 +412,10 @@ MonoBehaviour:
     type: 3}
   MeshMountain: {fileID: 2534964839176971238, guid: 929e2305473637048b3c22570353130a,
     type: 3}
+  ForestPrefab: {fileID: 4089484436975827284, guid: 604f36abe67ee8f40819695e1a6d787c,
+    type: 3}
+  JunglePrefab: {fileID: 4089484436975827284, guid: bd5af72cb792d764597b0e72d07e7467,
+    type: 3}
   MatOcean: {fileID: 2100000, guid: 3a8627bbc63488a439e5e50165805d0f, type: 2}
   MatPlains: {fileID: 2100000, guid: 27c6f89a6e4330a4c80b6d41a2be210e, type: 2}
   MatDesert: {fileID: 2100000, guid: f82187e12e2cddc4c96caddabf84a855, type: 2}
@@ -420,8 +424,8 @@ MonoBehaviour:
   mountainHeight: 0.9
   hillHeight: 0.5
   flatHeight: 0
-  MoistureJungle: 1
-  MoistureForest: 0.5
+  MoistureJungle: 0.5
+  MoistureForest: 0.25
   MoistureGrasslands: 0
   MoisturePlains: -0.5
   myMapSize: 1
