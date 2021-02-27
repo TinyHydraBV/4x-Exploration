@@ -23,6 +23,13 @@ public class HexMap : MonoBehaviour
     public Material MatGrasslands;
     public Material MatMountain;
 
+    //tunable values for minimum height to define terrain type
+    [Header("Define minimum height for a tile to be a certain terrain type")]
+    public float mountainHeight = 0.9f;
+    public float hillHeight = 0.5f;
+    [Tooltip("This tunes sea level height")]
+    public float flatHeight = 0.0f; //sea level
+
     //define map dimensions
     public enum mapSize { Test, Tiny, Small, Standard, Huge };
     public mapSize myMapSize;
@@ -51,10 +58,23 @@ public class HexMap : MonoBehaviour
 
         if (allowWrapEastWest)
         {
-            x = x % numRows;
+            x = x % numColumns; //module doesn't seem to fix negatives
+            if(x < 0)
+            {
+                x += numColumns;
+            }
         }
-            
-        return hexes[x, y];
+
+        //find continent generation going out of bounds (asking for negative numbers)
+        try
+        {
+            return hexes[x, y];
+        }
+        catch
+        {
+            Debug.LogError("GetHexAt: "+ x +","+y);
+            return null;
+        }
     }
 
     virtual public void GenerateMap()
@@ -109,8 +129,8 @@ public class HexMap : MonoBehaviour
                 //      keep in mind this will result in the max row number being offset from the verticle on the map, ie hex coordinates (0,10) will be +5 units (in world coordinates) along the x axis from hex (0,0) 
                 Hex h = new Hex(column, row);
 
-                //set starting elevation for all hexes
-                h.Elevation = -1;
+                //set starting elevation for all hexes (base ocean level)
+                h.Elevation = -0.5f;
 
                 // story at x & y coordinates in the array
                 hexes[column, row] = h;
@@ -164,9 +184,17 @@ public class HexMap : MonoBehaviour
                 //Set material and mesh
                 //grab GameObject Mesh Renderer materials slot
                 MeshRenderer mr = hexGO.GetComponentInChildren<MeshRenderer>();
-                if (h.Elevation >= 0)
+                if (h.Elevation >= mountainHeight)
                 {
-                    mr.material = MatGrasslands;
+                    mr.material = MatMountain;
+                }
+                else if (h.Elevation >= hillHeight)
+                {
+                    mr.material = MatGrasslands; //temporarily grassland material will be hills until we institute specific models for hills
+                }
+                else if (h.Elevation >= flatHeight)
+                {
+                    mr.material = MatPlains;
                 }
                 else
                 {
@@ -190,7 +218,7 @@ public class HexMap : MonoBehaviour
         {
             for (int dy = Mathf.Max(-range + 1, -dx - range); dy < Mathf.Min(range, -dx + range - 1); dy++)
             {
-                results.Add(hexes[centerHex.Q + dx, centerHex.R + dy]);
+                results.Add( GetHexAt(centerHex.Q + dx, centerHex.R + dy));
             }
         }
 

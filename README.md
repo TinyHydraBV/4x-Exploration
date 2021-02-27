@@ -1,4 +1,5 @@
 # 4x-Exploration
+unity version: 2020.2.6f1
 
 Creating a basic 4X game using hexes
 
