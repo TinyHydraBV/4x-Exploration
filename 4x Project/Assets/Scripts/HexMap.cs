@@ -173,7 +173,6 @@ public class HexMap : MonoBehaviour
                 //show debug hex coordinates
                 hexGO.GetComponentInChildren<TextMesh>().text = string.Format("{0}, {1}", column, row);
 
-                
             }
         }
 
