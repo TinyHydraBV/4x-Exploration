@@ -41,8 +41,10 @@ public class HexMap : MonoBehaviour
     public int numColumns; //don't use width because width of base hex != 1
 
     // TODO: Link up with Hex.cs class of this!
-    bool allowWrapEastWest = true;
-    //bool allowWrapNorthSouth = false;
+    [Tooltip("Allows map to wrap East to West, this is true by default and should probably not be disabled")]
+    public bool allowWrapEastWest = true;
+    [HideInInspector]
+    public bool allowWrapNorthSouth = false;  //TODO: Set this up to work (don't like doubkle cylinder wrapping which is what copying E to W implementation would do)
 
     private Hex[,] hexes;
     //track some way to link which game objects are asigned to which hex
@@ -127,7 +129,7 @@ public class HexMap : MonoBehaviour
                 //      For more on Cube Coordinate approach checkout www.redblobgames.com/grids/hexagons/
                 //      because of the offset in the Hex.cs class we will get a rombus shape as all columns will be drawn on a diagonal
                 //      keep in mind this will result in the max row number being offset from the verticle on the map, ie hex coordinates (0,10) will be +5 units (in world coordinates) along the x axis from hex (0,0) 
-                Hex h = new Hex(column, row);
+                Hex h = new Hex(this, column, row);
 
                 //set starting elevation for all hexes (base ocean level)
                 h.Elevation = -0.5f;
@@ -184,27 +186,28 @@ public class HexMap : MonoBehaviour
                 //Set material and mesh
                 //grab GameObject Mesh Renderer materials slot
                 MeshRenderer mr = hexGO.GetComponentInChildren<MeshRenderer>();
+                //grab GameObject Mesh Filter component
+                MeshFilter mf = hexGO.GetComponentInChildren<MeshFilter>();
                 if (h.Elevation >= mountainHeight)
                 {
                     mr.material = MatMountain;
+                    mf.mesh = MeshMountain;
                 }
                 else if (h.Elevation >= hillHeight)
                 {
                     mr.material = MatGrasslands; //temporarily grassland material will be hills until we institute specific models for hills
+                    mf.mesh = MeshHill;
                 }
                 else if (h.Elevation >= flatHeight)
                 {
                     mr.material = MatPlains;
+                    mf.mesh = MeshFlat;
                 }
                 else
                 {
                     mr.material = MatOcean; //set materials slot to ocean
-                }
-                
-
-                //grab GameObject Mesh Filter component
-                MeshFilter mf = hexGO.GetComponentInChildren<MeshFilter>(); 
-                mf.mesh = MeshWater; //set materials slot to ocean
+                    mf.mesh = MeshWater; //set materials slot to ocean
+                } 
             }
         }
     }

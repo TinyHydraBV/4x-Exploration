@@ -13,8 +13,10 @@ public class Hex
     
 
     //we would expect 3 values for Hex, but we only need two (given the math above the public fields) we never have to ask for the value of S
-    public Hex(int q, int r)
+    public Hex(HexMap hexMap, int q, int r)
     {
+        this.hexMap = hexMap;
+
         this.Q = q;
         this.R = r;
         this.S = -(q + r);
@@ -30,6 +32,8 @@ public class Hex
     public float Elevation;
     public float Moisture;
 
+    private HexMap hexMap;
+
     //setup WIDTH MULTIPLIER as a constant rather than doing that square root operation with each instantiation
     readonly float WIDTH_MULTIPLIER = Mathf.Sqrt(3) / 2;
 
@@ -37,8 +41,8 @@ public class Hex
     float radius = 1f;
 
     //TODO: Link this up to HexMap.cs version
-    bool allowWrapEastWest = true;
-    //bool allowWrapNorthSouth = false;
+    public bool allowWrapEastWest = true;
+    public bool allowWrapNorthSouth = false;
         // this would be hard to implement as you would need to start going down after crossing the North pole, and vice versa.
 
     /// <summary>
@@ -84,7 +88,7 @@ public class Hex
         // how far off from the camera's position are we relative to map width total
             // we want howManyWidthsFromCamera to be btwn -0.5 and 0.5
         Vector3 position = Position();
-        if(allowWrapEastWest == true)
+        if(hexMap.allowWrapEastWest == true)
         {
             float howManyWidthsFromCamera = (position.x - cameraPosition.x) / mapWidth;
             if (Mathf.Abs(howManyWidthsFromCamera) <= 0.5f)
@@ -119,12 +123,32 @@ public class Hex
 
     public static float Distance(Hex a, Hex b)
     {
-        //FIXME: Wrapping
+        int dQ = Mathf.Abs(a.Q - b.Q);
+
+        //FIXME: This is probably wrong for wrapping
+        if (a.hexMap.allowWrapEastWest)
+        {
+            if(dQ > a.hexMap.numColumns / 2)
+            {
+                dQ = a.hexMap.numColumns - dQ;
+            }
+        }
+
+        //FIXME: This is only works (and is probably wrong) for a North South wrapping implementation that is not enabled atm: double cylindar or donut world wrapping)
+        int dR = Mathf.Abs(a.R - b.R);
+        if (a.hexMap.allowWrapNorthSouth)
+        {
+            if (dR > a.hexMap.numRows / 2)
+            {
+                dR = a.hexMap.numRows - dR;
+            }
+        }
+
         return
             // the largest difference will be the distance between two hexes
             Mathf.Max(
-                Mathf.Abs(a.Q - b.Q),
-                Mathf.Abs(a.R - b.R),
+                dQ,
+                dR,
                 Mathf.Abs(a.S - b.S)
             );
     }

@@ -408,9 +408,9 @@ MonoBehaviour:
     type: 3}
   MeshFlat: {fileID: 2534964839176971238, guid: 12693c534440cd44b91aa36bb1fbe878,
     type: 3}
-  MeshHill: {fileID: 2534964839176971238, guid: 12693c534440cd44b91aa36bb1fbe878,
+  MeshHill: {fileID: 2534964839176971238, guid: 530ae4758da29ce41bfb100cd0dafc83,
     type: 3}
-  MeshMountain: {fileID: 2534964839176971238, guid: 12693c534440cd44b91aa36bb1fbe878,
+  MeshMountain: {fileID: 2534964839176971238, guid: 929e2305473637048b3c22570353130a,
     type: 3}
   MatOcean: {fileID: 2100000, guid: 3a8627bbc63488a439e5e50165805d0f, type: 2}
   MatPlains: {fileID: 2100000, guid: 27c6f89a6e4330a4c80b6d41a2be210e, type: 2}
@@ -422,6 +422,8 @@ MonoBehaviour:
   myMapSize: 1
   numRows: 0
   numColumns: 0
+  allowWrapEastWest: 1
+  allowWrapNorthSouth: 0
   minSplats: 4
   maxSplats: 8
   minRange: 5
