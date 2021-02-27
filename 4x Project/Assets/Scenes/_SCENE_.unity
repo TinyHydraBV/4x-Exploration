@@ -414,11 +414,16 @@ MonoBehaviour:
     type: 3}
   MatOcean: {fileID: 2100000, guid: 3a8627bbc63488a439e5e50165805d0f, type: 2}
   MatPlains: {fileID: 2100000, guid: 27c6f89a6e4330a4c80b6d41a2be210e, type: 2}
+  MatDesert: {fileID: 2100000, guid: f82187e12e2cddc4c96caddabf84a855, type: 2}
   MatGrasslands: {fileID: 2100000, guid: 3028c5c7ee1ad4b4c93831f79d16bdce, type: 2}
   MatMountain: {fileID: 2100000, guid: bcac276041aa85449bdaa2af394f5bed, type: 2}
   mountainHeight: 0.9
   hillHeight: 0.5
   flatHeight: 0
+  MoistureJungle: 1
+  MoistureForest: 0.5
+  MoistureGrasslands: 0
+  MoisturePlains: -0.5
   myMapSize: 1
   numRows: 0
   numColumns: 0
@@ -430,6 +435,8 @@ MonoBehaviour:
   maxRange: 7
   noiseResolution: 0.01
   noiseScale: 2
+  moistureResolution: 0.05
+  moistureScale: 2
   numContinents: 3
 --- !u!4 &1510538277
 Transform:

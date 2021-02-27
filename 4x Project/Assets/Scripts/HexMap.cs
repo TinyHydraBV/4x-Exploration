@@ -20,6 +20,7 @@ public class HexMap : MonoBehaviour
     //Fixed Material Types (replacing array)
     public Material MatOcean;
     public Material MatPlains;
+    public Material MatDesert;
     public Material MatGrasslands;
     public Material MatMountain;
 
@@ -29,6 +30,12 @@ public class HexMap : MonoBehaviour
     public float hillHeight = 0.5f;
     [Tooltip("This tunes sea level height")]
     public float flatHeight = 0.0f; //sea level
+
+    [Header("Define minimum moisture levels for a tile to be a certain terrain subtype")]
+    public float MoistureJungle = 1f;
+    public float MoistureForest = 0.5f;
+    public float MoistureGrasslands = 0.0f;
+    public float MoisturePlains = -0.5f;
 
     //define map dimensions
     public enum mapSize { Test, Tiny, Small, Standard, Huge };
@@ -188,6 +195,35 @@ public class HexMap : MonoBehaviour
                 MeshRenderer mr = hexGO.GetComponentInChildren<MeshRenderer>();
                 //grab GameObject Mesh Filter component
                 MeshFilter mf = hexGO.GetComponentInChildren<MeshFilter>();
+
+                //set moisture level
+                if (h.Elevation >= flatHeight)
+                {
+                    if (h.Moisture >= MoistureJungle)
+                    {
+                        mr.material = MatGrasslands;
+                        //TODO: Spawn Jungles
+                    }
+                    else if (h.Moisture >= MoistureForest)
+                    {
+                        mr.material = MatGrasslands;
+                        //TODO: Spawn forests
+                    }
+                    else if (h.Moisture >= MoistureGrasslands)
+                    {
+                        mr.material = MatGrasslands;
+                    }
+                    else if (h.Moisture >= MoisturePlains)
+                    {
+                        mr.material = MatPlains;
+                    }
+                    else
+                    {
+                        mr.material = MatDesert; //set materials slot to ocean
+                    }
+                }
+
+                //apply models to terrain based on elevation (will override mountain texture)
                 if (h.Elevation >= mountainHeight)
                 {
                     mr.material = MatMountain;
@@ -195,19 +231,17 @@ public class HexMap : MonoBehaviour
                 }
                 else if (h.Elevation >= hillHeight)
                 {
-                    mr.material = MatGrasslands; //temporarily grassland material will be hills until we institute specific models for hills
                     mf.mesh = MeshHill;
                 }
                 else if (h.Elevation >= flatHeight)
                 {
-                    mr.material = MatPlains;
                     mf.mesh = MeshFlat;
                 }
                 else
                 {
                     mr.material = MatOcean; //set materials slot to ocean
                     mf.mesh = MeshWater; //set materials slot to ocean
-                } 
+                }
             }
         }
     }
