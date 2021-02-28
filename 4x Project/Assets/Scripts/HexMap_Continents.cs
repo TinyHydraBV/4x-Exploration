@@ -116,6 +116,10 @@ public class HexMap_Continents : HexMap
 
         //update all hex visuals to match data
         UpdateHexVisuals();
+
+        //spawn unit at starting location
+        Unit unit = new Unit();
+        SpawnUnitAt(unit, UnitTestPrefab, 36, 15);
     }
 
     void ElevateArea(int q, int r, int range, float centerHeight = 0.8f)

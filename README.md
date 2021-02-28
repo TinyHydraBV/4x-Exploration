@@ -6,6 +6,7 @@ Creating a basic 4X game using hexes
 /// Goals ///
 In Progress:
 1. Create an interactable hex map with world wrapping and different terrain types
+	- Lookup project porcupine for example to help migrating the terrain definitions to a config file (JSON?) & map generation to LUA
 
 To Do:
 2. Add turn based mechanics

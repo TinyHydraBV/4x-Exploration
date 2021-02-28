@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq; //add support for ToArray()
 
 /// <summary>
 ///  The Hex class defines the grid prosition, world space position, size, neighbors, etc... of a Hex tile.
@@ -15,7 +16,7 @@ public class Hex
     //we would expect 3 values for Hex, but we only need two (given the math above the public fields) we never have to ask for the value of S
     public Hex(HexMap hexMap, int q, int r)
     {
-        this.hexMap = hexMap;
+        this.HexMap = hexMap;
 
         this.Q = q;
         this.R = r;
@@ -32,13 +33,15 @@ public class Hex
     public float Elevation;
     public float Moisture;
 
-    private HexMap hexMap;
+    public readonly HexMap HexMap;
 
     //setup WIDTH MULTIPLIER as a constant rather than doing that square root operation with each instantiation
     readonly float WIDTH_MULTIPLIER = Mathf.Sqrt(3) / 2;
 
     //hard code radius of a hex (change later)
     float radius = 1f;
+
+    HashSet<Unit> units;
 
     //TODO: Link this up to HexMap.cs version
     public bool allowWrapEastWest = true;
@@ -78,6 +81,11 @@ public class Hex
         return HexWidth();
     }
 
+    public Vector3 PositionRelativeToCamera()
+    {
+        return HexMap.GetHexPosition(this);
+    }
+
     public Vector3 PositionRelativeToCamera( Vector3 cameraPosition, float numRows, float numColumns) 
     {
         //float mapHeight = numRows * HexVerticalSpacing();
@@ -88,7 +96,7 @@ public class Hex
         // how far off from the camera's position are we relative to map width total
             // we want howManyWidthsFromCamera to be btwn -0.5 and 0.5
         Vector3 position = Position();
-        if(hexMap.allowWrapEastWest == true)
+        if(HexMap.allowWrapEastWest == true)
         {
             float howManyWidthsFromCamera = (position.x - cameraPosition.x) / mapWidth;
             if (Mathf.Abs(howManyWidthsFromCamera) <= 0.5f)
@@ -126,21 +134,21 @@ public class Hex
         int dQ = Mathf.Abs(a.Q - b.Q);
 
         //FIXME: This is probably wrong for wrapping
-        if (a.hexMap.allowWrapEastWest)
+        if (a.HexMap.allowWrapEastWest)
         {
-            if(dQ > a.hexMap.numColumns / 2)
+            if(dQ > a.HexMap.numColumns / 2)
             {
-                dQ = a.hexMap.numColumns - dQ;
+                dQ = a.HexMap.numColumns - dQ;
             }
         }
 
         //FIXME: This is only works (and is probably wrong) for a North South wrapping implementation that is not enabled atm: double cylindar or donut world wrapping)
         int dR = Mathf.Abs(a.R - b.R);
-        if (a.hexMap.allowWrapNorthSouth)
+        if (a.HexMap.allowWrapNorthSouth)
         {
-            if (dR > a.hexMap.numRows / 2)
+            if (dR > a.HexMap.numRows / 2)
             {
-                dR = a.hexMap.numRows - dR;
+                dR = a.HexMap.numRows - dR;
             }
         }
 
@@ -151,5 +159,28 @@ public class Hex
                 dR,
                 Mathf.Abs(a.S - b.S)
             );
+    }
+
+    public void AddUnit( Unit unit)
+    {
+        if(units == null)
+        {
+            units = new HashSet<Unit>();
+        }
+
+        units.Add(unit);
+    }
+
+    public void RemoveUnit( Unit unit)
+    {
+        if (units != null)
+        {
+            units.Remove(unit);
+        }
+    }
+
+    public Unit[] Units()
+    {
+        return units.ToArray();
     }
 }

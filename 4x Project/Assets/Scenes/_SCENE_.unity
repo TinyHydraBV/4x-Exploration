@@ -435,6 +435,8 @@ MonoBehaviour:
   MatDesert: {fileID: 2100000, guid: f82187e12e2cddc4c96caddabf84a855, type: 2}
   MatGrasslands: {fileID: 2100000, guid: 3028c5c7ee1ad4b4c93831f79d16bdce, type: 2}
   MatMountain: {fileID: 2100000, guid: bcac276041aa85449bdaa2af394f5bed, type: 2}
+  UnitTestPrefab: {fileID: 6612427943710980130, guid: e2613f6b467d6df4ea280b7201c8e5e6,
+    type: 3}
   mountainHeight: 0.9
   hillHeight: 0.5
   flatHeight: 0
@@ -446,7 +448,6 @@ MonoBehaviour:
   numRows: 0
   numColumns: 0
   allowWrapEastWest: 1
-  allowWrapNorthSouth: 0
   minSplats: 4
   maxSplats: 8
   minRange: 5
@@ -499,6 +500,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1095be81107b5248b7ac4dd55da1813, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  angleChangeEnabled: 1
+  maxZoomIn: 2
+  maxZoomOut: 20
+  angleAdjustLimit: 10
 --- !u!4 &2116871804
 Transform:
   m_ObjectHideFlags: 0

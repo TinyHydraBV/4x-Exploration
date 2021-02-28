@@ -9,6 +9,22 @@ public class HexMap : MonoBehaviour
     {
         GenerateMap();
     }
+
+    private void Update()
+    {
+        //TESTING: Hit spacebar to advance to next turn
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if(units != null)
+            {
+                foreach (Unit u in units)
+                {
+                    u.DoTurn();
+                }
+            }
+        }
+    }
+
     public GameObject HexPrefab;
 
     //terrain Mesh types
@@ -28,6 +44,8 @@ public class HexMap : MonoBehaviour
     public Material MatDesert;
     public Material MatGrasslands;
     public Material MatMountain;
+
+    public GameObject UnitTestPrefab;
 
     //tunable values for minimum height to define terrain type
     [Header("Define minimum height for a tile to be a certain terrain type")]
@@ -55,16 +73,19 @@ public class HexMap : MonoBehaviour
     // TODO: Link up with Hex.cs class of this!
     [Tooltip("Allows map to wrap East to West, this is true by default and should probably not be disabled")]
     public bool allowWrapEastWest = true;
-    [HideInInspector]
+    [System.NonSerialized]
     public bool allowWrapNorthSouth = false;  //TODO: Set this up to work (don't like doubkle cylinder wrapping which is what copying E to W implementation would do)
 
     private Hex[,] hexes;
     //track some way to link which game objects are asigned to which hex
     private Dictionary<Hex, GameObject> hexToGameObjectMap;
 
+    private HashSet<Unit> units;
+    private Dictionary<Unit, GameObject> unitToGameObjectMap;
+
     public Hex GetHexAt(int x, int y)
     {
-        if(hexes == null)
+        if (hexes == null)
         {
             Debug.LogError("Hexes array not yet instantiated!");
             return null;
@@ -73,7 +94,7 @@ public class HexMap : MonoBehaviour
         if (allowWrapEastWest)
         {
             x = x % numColumns; //module doesn't seem to fix negatives
-            if(x < 0)
+            if (x < 0)
             {
                 x += numColumns;
             }
@@ -86,9 +107,19 @@ public class HexMap : MonoBehaviour
         }
         catch
         {
-            Debug.LogError("GetHexAt: "+ x +","+y);
+            Debug.LogError("GetHexAt: " + x + "," + y);
             return null;
         }
+    }
+
+    public Vector3 GetHexPosition(int q, int r)
+    {
+        Hex hex = GetHexAt(q, r);
+        return GetHexPosition(hex);
+    }
+    public Vector3 GetHexPosition(Hex hex)
+    {
+        return hex.PositionRelativeToCamera(Camera.main.transform.position, numRows, numColumns);
     }
 
     virtual public void GenerateMap()
@@ -97,7 +128,7 @@ public class HexMap : MonoBehaviour
 
 
         //generate our number of rows and columns for the map based on selected map size
-        if(myMapSize == mapSize.Tiny)
+        if (myMapSize == mapSize.Tiny)
         {
             numColumns = 60;
             numRows = 38;
@@ -167,6 +198,7 @@ public class HexMap : MonoBehaviour
                 hexToGameObjectMap[h] = hexGO;
 
                 //the hex game object should know about itself and the map to pass to the HexComponent to move itself based on this info
+                hexGO.name = string.Format("HEX: {0}, {1}", column, row); // name each hex in the hierarchy with its coordinats 
                 hexGO.GetComponent<HexComponent>().Hex = h;
                 hexGO.GetComponent<HexComponent>().HexMap = this;
 
@@ -179,17 +211,17 @@ public class HexMap : MonoBehaviour
         UpdateHexVisuals();
 
         //Can't use static batching with wrap around solution because we need to be able to move the hex transform based on camera position
-            //get static batching at runtime for this root object (try to combine some stuff for efficiencies sake)
-            //for a 10x10 map this takes our batches from hundreds to tens, so this should have a real impact on larger maps
-       //StaticBatchingUtility.Combine(this.gameObject);
+        //get static batching at runtime for this root object (try to combine some stuff for efficiencies sake)
+        //for a 10x10 map this takes our batches from hundreds to tens, so this should have a real impact on larger maps
+        //StaticBatchingUtility.Combine(this.gameObject);
     }
 
     public void UpdateHexVisuals()
     {
         //loop through all our hexes
-        for(int column = 0; column < numColumns; column++)
+        for (int column = 0; column < numColumns; column++)
         {
-            for(int row = 0; row < numRows; row++)
+            for (int row = 0; row < numRows; row++)
             {
                 Hex h = hexes[column, row];
                 GameObject hexGO = hexToGameObjectMap[h];
@@ -208,7 +240,7 @@ public class HexMap : MonoBehaviour
                         mr.material = MatGrasslands;
                         //Spawn jungle adjusting for hill height
                         Vector3 p = hexGO.transform.position;
-                        if(h.Elevation >= hillHeight)
+                        if (h.Elevation >= hillHeight)
                         {
                             p.y += 0.25f;
                         }
@@ -271,16 +303,30 @@ public class HexMap : MonoBehaviour
         {
             for (int dy = Mathf.Max(-range + 1, -dx - range); dy < Mathf.Min(range, -dx + range - 1); dy++)
             {
-                results.Add( GetHexAt(centerHex.Q + dx, centerHex.R + dy));
+                results.Add(GetHexAt(centerHex.Q + dx, centerHex.R + dy));
             }
         }
 
         return results.ToArray();
     }
 
-    //Update is called once per frame
-    //void Update()
-    //{
+    public void SpawnUnitAt(Unit unit, GameObject prefab, int q, int r)
+    {
 
-    //}
+        if(units == null)
+        {
+            units = new HashSet<Unit>();
+            unitToGameObjectMap = new Dictionary<Unit, GameObject>();
+        }
+
+        Hex myHex = GetHexAt(q, r);
+        GameObject myHexGO = hexToGameObjectMap[myHex];
+        unit.SetHex(myHex);
+
+        GameObject unitGO = (GameObject)Instantiate(prefab, myHexGO.transform.position, Quaternion.identity, myHexGO.transform);
+        unit.OnUnitMoved += unitGO.GetComponent<UnitView>().OnUnitMoved;
+
+        units.Add(unit);
+        unitToGameObjectMap[unit] = unitGO;
+    }
 }
