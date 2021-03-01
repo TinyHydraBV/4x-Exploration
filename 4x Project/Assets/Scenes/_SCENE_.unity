@@ -500,6 +500,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1095be81107b5248b7ac4dd55da1813, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mouseDragThreshold: 5
   angleChangeEnabled: 1
   maxZoomIn: 2
   maxZoomOut: 20

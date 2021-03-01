@@ -14,6 +14,8 @@ public class MouseController : MonoBehaviour
     Vector3 lastMousePosition; //From Input.mousePosition
 
     //Camera dragging bookkeeping variables
+    [Tooltip("pixel delta threshold for mouse movement to trigger a camera drag")]
+    public int mouseDragThreshold = 1; // threshold of mouse movement to start a drag
     Vector3 lastMouseGroundPlanePosition;
 
     [Tooltip("Does the angle change with zooming in/out using the scroll wheel?")]
@@ -23,10 +25,14 @@ public class MouseController : MonoBehaviour
     public float maxZoomOut = 20;
     [Tooltip("Defines bookends for zoom amount where angle from camera to ground will either decress or increase")]
     public float angleAdjustLimit = 10;
-   
+
+    //Unit movement
+    Unit selectedUnit = null;
 
     delegate void UpdateFunc();
     UpdateFunc Update_CurrentFunc; //Update_CurrentFunc variable is just a pointer to a function that will run on each update frame
+
+    
 
     void Update()
     {
@@ -58,21 +64,34 @@ public class MouseController : MonoBehaviour
     //Given the current context what is the correct mouse behavior?
     void Update_DetectModeStart()
     {
-        //left click & release
-        //if it's point to a unit
-        //if it's pointing to an interactable UI element
+        
+        
 
         if (Input.GetMouseButtonDown(0))
         {
             //left mouse button down (this frame)
             //      This doesn't do much (maybe nothing beyond it's camera drag functionality)
+            Debug.Log("Mouse down");
         }
-        else if (Input.GetMouseButton(0) && Input.mousePosition != lastMousePosition)
+        else if (Input.GetMouseButtonUp(0) )
+        {
+            //left click & release (no dragging, need a drag threshold to position check to avoid human error)
+            Debug.Log("Mouse up - clicked yo!");
+            //TODO: Detect if clicking on a hex with a unit
+            //      If true, select it
+        }
+        else if (Input.GetMouseButton(0) && Vector3.Distance( Input.mousePosition, lastMousePosition) > mouseDragThreshold)
         {
             //left mouse button is being held down && the mouse moved (camera drag)
             Update_CurrentFunc = Update_CameraDrag;
             lastMouseGroundPlanePosition = MouseToGroundPlane(Input.mousePosition);
             Update_CurrentFunc();
+        }
+        else if (selectedUnit != null && Input.GetMouseButton(1))
+        {
+            //Select a unit and we are holding down the right mouse button: Unit movement mode
+            //      Show a path from unit to mouse position via the pathfinding system
+
         }
     }
 
@@ -88,6 +107,19 @@ public class MouseController : MonoBehaviour
         }
         float rayLength = (mouseRay.origin.y / mouseRay.direction.y);
         return mouseRay.origin - (mouseRay.direction * rayLength);
+    }
+
+    void Update_UnitMovement()
+    {
+        if (Input.GetMouseButtonUp(1))
+        {
+            Debug.Log("Complete unit movement.");
+
+            //TODO: copy pathfinding path to unit's movement queue (if that unit has movement left it will execute move immediately)
+
+            CancelUpdateFunc();
+            return;
+        }
     }
 
     void Update_CameraDrag()
