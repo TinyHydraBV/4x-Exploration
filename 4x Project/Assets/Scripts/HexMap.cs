@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class HexMap : MonoBehaviour
@@ -7,7 +8,21 @@ public class HexMap : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        WipeMap();
         GenerateMap();
+    }
+    private void Awake()
+    {
+        seed = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+    }
+
+    private void OnValidate()
+    {
+        if (Application.isPlaying == true)
+        {
+            WipeMap();
+            GenerateMap();
+        }
     }
 
     private void Update()
@@ -26,6 +41,7 @@ public class HexMap : MonoBehaviour
     }
 
     public GameObject HexPrefab;
+    //Get parent for wiping map
 
     //terrain Mesh types
     public Mesh MeshWater;
@@ -83,6 +99,9 @@ public class HexMap : MonoBehaviour
     private HashSet<Unit> units;
     private Dictionary<Unit, GameObject> unitToGameObjectMap;
 
+    [System.NonSerialized]
+    public int seed;
+
     public Hex GetHexAt(int x, int y)
     {
         if (hexes == null)
@@ -125,7 +144,7 @@ public class HexMap : MonoBehaviour
     virtual public void GenerateMap()
     {
         //base map generation (all ocean)
-
+        //TODO: Call helper function to wipe map between map generations.
 
         //generate our number of rows and columns for the map based on selected map size
         if (myMapSize == mapSize.Tiny)
@@ -328,5 +347,13 @@ public class HexMap : MonoBehaviour
 
         units.Add(unit);
         unitToGameObjectMap[unit] = unitGO;
+    }
+
+    public void WipeMap()
+    {
+        foreach (Transform child in transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
     }
 }

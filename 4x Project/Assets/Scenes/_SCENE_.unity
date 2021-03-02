@@ -445,15 +445,15 @@ MonoBehaviour:
   MoistureGrasslands: 0
   MoisturePlains: -0.5
   myMapSize: 1
-  numRows: 0
-  numColumns: 0
+  numRows: 38
+  numColumns: 60
   allowWrapEastWest: 1
   minSplats: 4
   maxSplats: 8
   minRange: 5
   maxRange: 7
   noiseResolution: 0.01
-  noiseScale: 2
+  noiseScale: 1.75
   moistureResolution: 0.05
   moistureScale: 2
   numContinents: 3

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class HexMap_Continents : HexMap
@@ -24,7 +25,6 @@ public class HexMap_Continents : HexMap
     [Header("Pick number and spacing of continents")]
     [Tooltip("Continent spacing will be determined based on map size.")]
     public int numContinents = 1;
-    
 
     //override base generate map function to make a specific type of map
     override public void GenerateMap()
@@ -35,20 +35,21 @@ public class HexMap_Continents : HexMap
         //spacing between continents should be spread fairly evenly across map based on how many columns we have
         int continentSpacing = numColumns / numContinents;
 
-        //make continents
-        //Random.InitState(0);
-        //      For Testing: Uncomment this to seed Random with 0, making it so it always generates the same continents
+        //make continents using random seed based on time
+        Debug.Log("Time is: " + seed);
+        UnityEngine.Random.InitState(seed); //maybe can store the seed for replication?
+
         for (int c = 0; c < numContinents; c++)
         {
             //Make a raised area
             //      elevate some hexes, how do we access the hex we want and how do we set the height? (two dimensional array)
             //      randomize placement based on ranges for number of splats and range (radius) of the splats.
-            int numSplats = Random.Range(minSplats, maxSplats);
+            int numSplats = UnityEngine.Random.Range(minSplats, maxSplats);
             for (int i = 0; i < numSplats; i++)
             {
-                int range = Random.Range(minRange, maxRange);
-                int y = Random.Range(range, numRows - range);
-                int x = Random.Range(0, 10) - y / 2 + (c * continentSpacing);
+                int range = UnityEngine.Random.Range(minRange, maxRange);
+                int y = UnityEngine.Random.Range(range, numRows - range);
+                int x = UnityEngine.Random.Range(0, 10) - y / 2 + (c * continentSpacing);
                 ElevateArea(x, y, range);
             }
         }
@@ -56,7 +57,7 @@ public class HexMap_Continents : HexMap
         // add elevations (perlin noise?)
         //      loop through whole map again
         //make noise more random (perlin noise is not inherently random)
-        Vector2 noiseOffset = new Vector2( Random.Range(0f, 1f), Random.Range(0f, 1f) );
+        Vector2 noiseOffset = new Vector2(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f) );
 
         for (int column = 0; column < numColumns; column++)
         {
@@ -81,7 +82,7 @@ public class HexMap_Continents : HexMap
         //set mesh to mountain/hill/flat/water based on height
 
         //simulate rainfall / moisture and set plains/grasslands + forest
-        noiseOffset = new Vector2(Random.Range(0f, 1f), Random.Range(0f, 1f));
+        noiseOffset = new Vector2(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
         for (int column = 0; column < numColumns; column++)
         {
             for (int row = 0; row < numRows; row++)
