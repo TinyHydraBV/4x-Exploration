@@ -2,27 +2,19 @@
 using System.Collections.Generic;
 using System;
 using UnityEngine;
+using UnityEditor;
 
 public class HexMap : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
     {
-        WipeMap();
+        // WipeMap();
         GenerateMap();
     }
     private void Awake()
     {
         seed = (int)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
-    }
-
-    private void OnValidate()
-    {
-        if (Application.isPlaying == true)
-        {
-            WipeMap();
-            GenerateMap();
-        }
     }
 
     private void Update()
@@ -63,22 +55,23 @@ public class HexMap : MonoBehaviour
 
     public GameObject UnitTestPrefab;
 
+    //define map dimensions
+    public enum mapSize { Test, Tiny, Small, Standard, Huge };
+    [Header("Pick a Map Size")]
+    public mapSize myMapSize;
+
     //tunable values for minimum height to define terrain type
     [Header("Define minimum height for a tile to be a certain terrain type")]
-    public float mountainHeight = 0.9f;
-    public float hillHeight = 0.5f;
+    [Range(0.0f,1.0f)] public float mountainHeight = 0.9f;
+    [Range(0.0f, 1.0f)] public float hillHeight = 0.5f;
     [Tooltip("This tunes sea level height")]
-    public float flatHeight = 0.0f; //sea level
+    [Range(-1.0f, 1.0f)] public float flatHeight = 0.0f; //sea level
 
     [Header("Define minimum moisture levels for a tile to be a certain terrain subtype")]
     public float MoistureJungle = 1f;
     public float MoistureForest = 0.5f;
     public float MoistureGrasslands = 0.0f;
     public float MoisturePlains = -0.5f;
-
-    //define map dimensions
-    public enum mapSize { Test, Tiny, Small, Standard, Huge };
-    public mapSize myMapSize;
 
     [HideInInspector]
     public int numRows;
@@ -349,11 +342,27 @@ public class HexMap : MonoBehaviour
         unitToGameObjectMap[unit] = unitGO;
     }
 
-    public void WipeMap()
+    virtual public void WipeMap()
     {
-        foreach (Transform child in transform)
+        for (int column = 0; column < numColumns; column++)
         {
-            GameObject.Destroy(child.gameObject);
+            for (int row = 0; row < numRows; row++)
+            {
+                Hex h = hexes[column, row];
+                h.Elevation = -0.5f;
+            }
+        }
+
+        foreach (var gameObj in FindObjectsOfType(typeof(GameObject)) as GameObject[])
+        {
+            if (gameObj.name == "ForestPrefab(Clone)")
+            {
+                Destroy(gameObj);
+            }
+            if (gameObj.name == "JunglePrefab(Clone)")
+            {
+                Destroy(gameObj);
+            }
         }
     }
 }

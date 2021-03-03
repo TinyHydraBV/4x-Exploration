@@ -65,6 +65,8 @@
     <Compile Include="Assets\Scripts\HexComponent.cs" />
     <Compile Include="Assets\Scripts\Unit.cs" />
     <Compile Include="Assets\Scripts\UnitView.cs" />
+    <Compile Include="Assets\Scripts\ObjectBuilderEditor.cs" />
+    <Compile Include="Assets\Scripts\MapEditor.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

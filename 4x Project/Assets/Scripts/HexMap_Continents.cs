@@ -8,10 +8,10 @@ public class HexMap_Continents : HexMap
     [Header("Pick a Number of Splats and Range/Radius of each continent Splat")]
     //public int elevateColumn;
     //public int elevateRow;
-    public int minSplats;
-    public int maxSplats;
-    public int minRange;
-    public int maxRange;
+    public int minSplats = 3;
+    public int maxSplats = 8;
+    public int minRange = 5;
+    public int maxRange = 10;
     [HeaderAttribute("Crinkliness of the continent")]
     [Tooltip("The higher this is the more condensed (blobby) the continents will be.")]
     public float noiseResolution = 0.01f;
@@ -122,7 +122,91 @@ public class HexMap_Continents : HexMap
         Unit unit = new Unit();
         SpawnUnitAt(unit, UnitTestPrefab, 36, 15);
     }
+    public override void WipeMap()
+    {
+        base.WipeMap();
+        for (int column = 0; column < numColumns; column++)
+        {
+            for (int row = 0; row < numRows; row++)
+            {
+                Hex h = GetHexAt(column, row);
+                h.Moisture = 0;
+            }
+        }
+    }
 
+    public void NewMap()
+    {
+        //spacing between continents should be spread fairly evenly across map based on how many columns we have
+        int continentSpacing = numColumns / numContinents;
+
+        //make continents using random seed based on time
+        Debug.Log("Time is: " + seed);
+        UnityEngine.Random.InitState(seed); //maybe can store the seed for replication?
+
+        for (int c = 0; c < numContinents; c++)
+        {
+            //Make a raised area
+            //      elevate some hexes, how do we access the hex we want and how do we set the height? (two dimensional array)
+            //      randomize placement based on ranges for number of splats and range (radius) of the splats.
+            int numSplats = UnityEngine.Random.Range(minSplats, maxSplats);
+            for (int i = 0; i < numSplats; i++)
+            {
+                int range = UnityEngine.Random.Range(minRange, maxRange);
+                int y = UnityEngine.Random.Range(range, numRows - range);
+                int x = UnityEngine.Random.Range(0, 10) - y / 2 + (c * continentSpacing);
+                ElevateArea(x, y, range);
+            }
+        }
+
+        // add elevations (perlin noise?)
+        //      loop through whole map again
+        //make noise more random (perlin noise is not inherently random)
+        Vector2 noiseOffset = new Vector2(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
+
+        for (int column = 0; column < numColumns; column++)
+        {
+            for (int row = 0; row < numRows; row++)
+            {
+                Hex h = GetHexAt(column, row);
+                //thank you Unity for building this in. this is a system for generating sudo-randomness.
+                //      must force these to be a float so we don't end up with integers where the divisions always comes out to 0 or 1
+                float n =
+                    Mathf.PerlinNoise(((float)column / Mathf.Max(numColumns, numRows) / noiseResolution) + noiseOffset.x,
+                    ((float)row / Mathf.Max(numColumns, numRows) / noiseResolution) + noiseOffset.y)
+                    - 0.5f;
+                //Mathf.Max(numColumns, numRows) fixes the alignment of perlin noise map to be rombus like our hex map, so we don't get stretched continents
+                //      if we just use numColumns and numRows our islands end up being long East to West
+
+                //subtract 0.5 because perlin noise generates a value from 0 to 1 (thus we now have negative values)
+                h.Elevation += n * noiseScale;
+            }
+        }
+
+
+        //set mesh to mountain/hill/flat/water based on height
+
+        //simulate rainfall / moisture and set plains/grasslands + forest
+        noiseOffset = new Vector2(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 1f));
+        for (int column = 0; column < numColumns; column++)
+        {
+            for (int row = 0; row < numRows; row++)
+            {
+                Hex h = GetHexAt(column, row);
+                //thank you Unity for building this in. this is a system for generating sudo-randomness.
+                //      must force these to be a float so we don't end up with integers where the divisions always comes out to 0 or 1
+                float n =
+                    Mathf.PerlinNoise(((float)column / Mathf.Max(numColumns, numRows) / moistureResolution) + noiseOffset.x,
+                    ((float)row / Mathf.Max(numColumns, numRows) / moistureResolution) + noiseOffset.y)
+                    - 0.5f;
+                //Mathf.Max(numColumns, numRows) fixes the alignment of perlin noise map to be rombus like our hex map, so we don't get stretched continents
+                //      if we just use numColumns and numRows our islands end up being long East to West
+
+                //subtract 0.5 because perlin noise generates a value from 0 to 1 (thus we now have negative values)
+                h.Moisture += n * moistureScale;
+            }
+        }
+    }
     void ElevateArea(int q, int r, int range, float centerHeight = 0.8f)
     {
         //grab center hex

@@ -12,7 +12,6 @@ public class CameraMotion : MonoBehaviour
 
     Vector3 oldPosition;
 
-
     // Update is called once per frame
     void Update()
     {

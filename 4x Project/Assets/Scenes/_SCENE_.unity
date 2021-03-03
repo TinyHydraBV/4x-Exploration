@@ -413,7 +413,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1510538275}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c65abf096f48f7240bfc5c3a7f34c108, type: 3}
+  m_Script: {fileID: 11500000, guid: 4ae67610b54b9a54c99151dbc5587040, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   HexPrefab: {fileID: 2957882933814928169, guid: ecfd160229edec441b25df2bafe7096e,
@@ -437,26 +437,26 @@ MonoBehaviour:
   MatMountain: {fileID: 2100000, guid: bcac276041aa85449bdaa2af394f5bed, type: 2}
   UnitTestPrefab: {fileID: 6612427943710980130, guid: e2613f6b467d6df4ea280b7201c8e5e6,
     type: 3}
+  myMapSize: 1
   mountainHeight: 0.9
   hillHeight: 0.5
   flatHeight: 0
-  MoistureJungle: 0.5
-  MoistureForest: 0.25
+  MoistureJungle: 1
+  MoistureForest: 0.5
   MoistureGrasslands: 0
   MoisturePlains: -0.5
-  myMapSize: 1
-  numRows: 38
-  numColumns: 60
+  numRows: 0
+  numColumns: 0
   allowWrapEastWest: 1
-  minSplats: 4
-  maxSplats: 8
-  minRange: 5
-  maxRange: 7
+  minSplats: 3
+  maxSplats: 5
+  minRange: 3
+  maxRange: 8
   noiseResolution: 0.01
   noiseScale: 1.75
   moistureResolution: 0.05
   moistureScale: 2
-  numContinents: 3
+  numContinents: 2
 --- !u!4 &1510538277
 Transform:
   m_ObjectHideFlags: 0
