@@ -33,7 +33,6 @@ public class MouseController : MonoBehaviour
     UpdateFunc Update_CurrentFunc; //Update_CurrentFunc variable is just a pointer to a function that will run on each update frame
 
     
-
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -64,8 +63,6 @@ public class MouseController : MonoBehaviour
     //Given the current context what is the correct mouse behavior?
     void Update_DetectModeStart()
     {
-        
-        
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -80,7 +77,7 @@ public class MouseController : MonoBehaviour
             //TODO: Detect if clicking on a hex with a unit
             //      If true, select it
         }
-        else if (Input.GetMouseButton(0) && Vector3.Distance( Input.mousePosition, lastMousePosition) > mouseDragThreshold)
+        else if (Input.GetMouseButton(0) && (Vector3.Distance( Input.mousePosition, lastMousePosition) > mouseDragThreshold))
         {
             //left mouse button is being held down && the mouse moved (camera drag)
             Update_CurrentFunc = Update_CameraDrag;
@@ -89,7 +86,7 @@ public class MouseController : MonoBehaviour
         }
         else if (selectedUnit != null && Input.GetMouseButton(1))
         {
-            //Select a unit and we are holding down the right mouse button: Unit movement mode
+            //Unit selected and player is holding down the right mouse button: Unit movement mode
             //      Show a path from unit to mouse position via the pathfinding system
 
         }

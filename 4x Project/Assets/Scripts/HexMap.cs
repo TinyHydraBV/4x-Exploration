@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using UnityEditor;
+using QPath;
 
-public class HexMap : MonoBehaviour
+public class HexMap : MonoBehaviour, IQPathWorld
 {
     // Start is called before the first frame update
     void Start()
@@ -27,6 +28,17 @@ public class HexMap : MonoBehaviour
                 foreach (Unit u in units)
                 {
                     u.DoTurn();
+                }
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            if (units != null)
+            {
+                foreach (Unit u in units)
+                {
+                    u.DUMMY_PATHING_FUNCTION();
                 }
             }
         }
@@ -109,6 +121,14 @@ public class HexMap : MonoBehaviour
             if (x < 0)
             {
                 x += numColumns;
+            }
+        }
+        if (allowWrapNorthSouth)
+        {
+            y = y % numRows;
+            if (y < 0)
+            {
+                y += numRows;
             }
         }
 
