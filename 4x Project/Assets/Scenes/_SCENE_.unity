@@ -456,7 +456,7 @@ MonoBehaviour:
   noiseScale: 1.75
   moistureResolution: 0.05
   moistureScale: 2
-  numContinents: 2
+  numContinents: 3
 --- !u!4 &1510538277
 Transform:
   m_ObjectHideFlags: 0

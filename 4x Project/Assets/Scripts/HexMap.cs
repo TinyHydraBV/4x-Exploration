@@ -233,10 +233,6 @@ public class HexMap : MonoBehaviour, IQPathWorld
                 hexGO.name = string.Format("HEX: {0}, {1}", column, row); // name each hex in the hierarchy with its coordinats 
                 hexGO.GetComponent<HexComponent>().Hex = h;
                 hexGO.GetComponent<HexComponent>().HexMap = this;
-
-                //show debug hex coordinates
-                hexGO.GetComponentInChildren<TextMesh>().text = string.Format("{0}, {1}", column, row);
-
             }
         }
 
@@ -276,6 +272,7 @@ public class HexMap : MonoBehaviour, IQPathWorld
                         {
                             p.y += 0.25f;
                         }
+                        h.MovementCost = 2; //jungles cost two to move through
                         GameObject.Instantiate(JunglePrefab, p, Quaternion.identity, hexGO.transform);
                     }
                     else if (h.Moisture >= MoistureForest)
@@ -287,6 +284,7 @@ public class HexMap : MonoBehaviour, IQPathWorld
                         {
                             p.y += 0.25f;
                         }
+                        h.MovementCost = 2; //forests cost two to move through
                         GameObject.Instantiate(ForestPrefab, p, Quaternion.identity, hexGO.transform);
                     }
                     else if (h.Moisture >= MoistureGrasslands)
@@ -308,20 +306,28 @@ public class HexMap : MonoBehaviour, IQPathWorld
                 {
                     mr.material = MatMountain;
                     mf.mesh = MeshMountain;
+                    h.MovementCost = -999; //mountains are impassable (this is so low the pathfinding will always go around it but need to figure out a better solution)
                 }
                 else if (h.Elevation >= hillHeight)
                 {
                     mf.mesh = MeshHill;
+                    h.MovementCost = 2; //hills cost two to move through
                 }
                 else if (h.Elevation >= flatHeight)
                 {
                     mf.mesh = MeshFlat;
+                    h.MovementCost = 1;
                 }
                 else
                 {
                     mr.material = MatOcean; //set materials slot to ocean
                     mf.mesh = MeshWater; //set materials slot to ocean
+                    h.MovementCost = -999; //TEMP: no walking on water either
                 }
+
+                //show debug hex coordinates
+                hexGO.GetComponentInChildren<TextMesh>().text = string.Format("{0}, {1}\n{2}", column, row, h.BaseMovementCost());
+
             }
         }
     }

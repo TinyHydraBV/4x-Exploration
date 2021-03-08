@@ -34,6 +34,9 @@ public class Hex : IQPathTile
     public float Elevation;
     public float Moisture;
 
+    //TEMP: Movement cost public value for testing purposes
+    public int MovementCost = 1;
+
     //TODO: Need property to track hex type (ocean, flatland, hills, mountain)
     //TODO: Need property to track hex subtype (plains, grasslands, desert, tundra, snow)
     //TODO: Need property to track hex details (forest, jungle, mine, farm, etc)
@@ -47,6 +50,11 @@ public class Hex : IQPathTile
     float radius = 1f;
 
     HashSet<Unit> units;
+
+    public override string ToString()
+    {
+        return Q + ", " + R;
+    }
 
     //TODO: Link this up to HexMap.cs version
     public bool allowWrapEastWest = true;
@@ -196,7 +204,7 @@ public class Hex : IQPathTile
     public int BaseMovementCost()
     {
         //TODO: Factor in terrain type and features
-        return 1; //temporary for testing
+        return MovementCost; //temporary for testing
     }
 
     //neighbors don't change

@@ -104,6 +104,12 @@ public class Unit : IQPathUnit
         //      than expected turn cost (can't spend all your movement points).
 
         float baseTurnsToEnterHex = MovementCostToEnterHex(hex) / Movement;
+        if(baseTurnsToEnterHex < 0)
+        {
+            //no entry to this hex, Impassable terrain
+            return -999999;
+        }
+        
         if(baseTurnsToEnterHex > 1)
         {
             //Even if something costs 3 to enter, and a unit has a max move of 2, units can enter it using a full turn of movement

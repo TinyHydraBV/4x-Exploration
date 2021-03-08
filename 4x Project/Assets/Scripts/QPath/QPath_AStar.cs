@@ -79,6 +79,12 @@ namespace QPath
                     float total_pathfinding_cost_to_neighbor =
                         neighbour.AggregateCostToEnter(g_score[current], current, unit);
 
+                    //check if terrain is impassable
+                    if(total_pathfinding_cost_to_neighbor < 0)
+                    {
+                        //Values less than zero represent an invalid/impassable tile
+                        continue;
+                    }
 
                     float tentative_g_score = g_score[current] + total_pathfinding_cost_to_neighbor;
 
