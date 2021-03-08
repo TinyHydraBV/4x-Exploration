@@ -47,7 +47,7 @@ public class Unit : IQPathUnit
     //TEMP - TODO: FIX ME!! (in Hex.cs too)
     public void DUMMY_PATHING_FUNCTION()
     {
-        IQPathTile[] pathTiles = QPath.QPath.FindPath(
+        Hex[] pathHexes = QPath.QPath.FindPath<Hex>(
             Hex.HexMap,
             this,
             Hex,
@@ -55,11 +55,13 @@ public class Unit : IQPathUnit
             Hex.CostEstimate
         );
 
-        Hex[] pathHexes = System.Array.ConvertAll( pathTiles, a => (Hex)a ); //convert IQPathTile array to Hex array
+        //accomodate FindPath() IQPathTile implementation requirements
+        //Hex[] pathTiles = System.Array.ConvertAll( pathHexes, a => (Hex)a ); //convert IQPathTile array to Hex array
 
-        Debug.Log("Got pathfinding path of length: " + pathTiles.Length);
+        Debug.Log("Got pathfinding path of length: " + pathHexes.Length);
 
         SetHexPath(pathHexes);
+
     }
 
     public void SetHexPath( Hex[] hexPath )
@@ -90,7 +92,7 @@ public class Unit : IQPathUnit
     }
 
     //Two helper functions for pathfinding
-    public int MovementCostToEnterHex(Hex hex)
+    public float MovementCostToEnterHex(Hex hex)
     {
         //TEST: Assume it costs one movement to enter a HEX
         //TODO: Override base movement cost based on movement mode & tile type

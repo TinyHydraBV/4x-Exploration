@@ -5,14 +5,14 @@ using UnityEngine;
 
 namespace QPath
 {
-    public class QPath_AStar
+    public class QPath_AStar<T> where T : IQPathTile  //When you instantiate a copy of this class, specify class type that implements IQPathTile
     {
         //does the actual pathfinding work
         public QPath_AStar( 
             IQPathWorld world, 
             IQPathUnit unit, 
-            IQPathTile startTile, 
-            IQPathTile endTile,
+            T startTile, 
+            T endTile,
             CostEstimateDelegate costEstimateFunc
         )
         {
@@ -30,46 +30,47 @@ namespace QPath
 
         IQPathWorld world;
         IQPathUnit unit;
-        IQPathTile startTile;
-        IQPathTile endTile;
+        T startTile;
+        T endTile;
         CostEstimateDelegate costEstimateFunc;
 
-        Queue<IQPathTile> path;
+        Queue<T> path;
 
         public void DoWork()
         {
             Debug.Log("QPath_AStar::DoWork");
-            path = new Queue<IQPathTile>();
+            path = new Queue<T>();
 
-            HashSet< IQPathTile > closedSet = new HashSet<IQPathTile>();//an array that is guaranteed to be unique
+            HashSet< T > closedSet = new HashSet<T>();//an array that is guaranteed to be unique
 
             //for openset use quill18's pathfinding priority queue
-            PathfindingPriorityQueue<IQPathTile> openSet = new PathfindingPriorityQueue<IQPathTile>();
+            PathfindingPriorityQueue<T> openSet = new PathfindingPriorityQueue<T>();
             //openSet of all our tiles is organized based on shortest distance first
             openSet.Enqueue(startTile, 0);
 
-            Dictionary<IQPathTile, IQPathTile> came_From = new Dictionary<IQPathTile, IQPathTile>();
+            Dictionary<T, T> came_From = new Dictionary<T, T>();
 
-            Dictionary<IQPathTile, float> g_score = new Dictionary<IQPathTile, float>();
+            Dictionary<T, float> g_score = new Dictionary<T, float>();
             g_score[startTile] = 0; //cost to get to our start tile is 0
 
-            Dictionary<IQPathTile, float> f_score = new Dictionary<IQPathTile, float>(); 
+            Dictionary<T, float> f_score = new Dictionary<T, float>(); 
             f_score[startTile] = costEstimateFunc(startTile, endTile); //includes the estimated cost of getting to that tile
         
             while (openSet.Count > 0)
             {
-                IQPathTile current = openSet.Dequeue();
+                T current = openSet.Dequeue();
 
-                if (current == endTile)
+                //are these referencing the same object in memory?
+                if ( System.Object.ReferenceEquals( current, endTile ) )
                 {
                     Reconstruct_path(came_From, current);
                     return;
                 }
 
                 closedSet.Add(current);
-                foreach (IQPathTile edge_neighbour in current.GetNeighbours())
+                foreach (T edge_neighbour in current.GetNeighbours())
                 {
-                    IQPathTile neighbour = edge_neighbour;
+                    T neighbour = edge_neighbour;
 
                     if (closedSet.Contains(neighbour))
                     {
@@ -88,6 +89,8 @@ namespace QPath
 
                     float tentative_g_score = g_score[current] + total_pathfinding_cost_to_neighbor;
 
+                    //Is the neighbour already in the open set?
+                    //  If so, and if this new score is worse than the old: discard this new result
                     if (openSet.Contains(neighbour) && tentative_g_score >= g_score[neighbour])
                     {
                         continue;
@@ -106,14 +109,14 @@ namespace QPath
         }
 
         private void Reconstruct_path(
-        Dictionary<IQPathTile, IQPathTile> came_From,
-        IQPathTile current)
+        Dictionary<T, T> came_From,
+        T current)
         {
             // So at this point, current IS the goal.
             // So what we want to do is walk backwards through the Came_From
             // map, until we reach the "end" of that map...which will be
             // our starting node!
-            Queue<IQPathTile> total_path = new Queue<IQPathTile>();
+            Queue<T> total_path = new Queue<T>();
             total_path.Enqueue(current); // This "final" step is the path is the goal!
 
             while (came_From.ContainsKey(current))
@@ -129,10 +132,10 @@ namespace QPath
 
             // At this point, total_path is a queue that is running
             // backwards from the END tile to the START tile, so let's reverse it.
-            path = new Queue<IQPathTile>(total_path.Reverse());
+            path = new Queue<T>(total_path.Reverse());
         }
 
-        public IQPathTile[] GetList()
+        public T[] GetList()
         {
             return path.ToArray();
         }

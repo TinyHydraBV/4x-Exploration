@@ -35,7 +35,7 @@ public class Hex : IQPathTile
     public float Moisture;
 
     //TEMP: Movement cost public value for testing purposes
-    public int MovementCost = 1;
+    public float MovementCost = 1;
 
     //TODO: Need property to track hex type (ocean, flatland, hills, mountain)
     //TODO: Need property to track hex subtype (plains, grasslands, desert, tundra, snow)
@@ -46,7 +46,7 @@ public class Hex : IQPathTile
     //setup WIDTH MULTIPLIER as a constant rather than doing that square root operation with each instantiation
     readonly float WIDTH_MULTIPLIER = Mathf.Sqrt(3) / 2;
 
-    //hard code radius of a hex (change later)
+    //TEMP: hard code radius of a hex (change later)
     float radius = 1f;
 
     HashSet<Unit> units;
@@ -201,7 +201,7 @@ public class Hex : IQPathTile
         return units.ToArray();
     }
 
-    public int BaseMovementCost()
+    public float BaseMovementCost()
     {
         //TODO: Factor in terrain type and features
         return MovementCost; //temporary for testing

@@ -23,13 +23,13 @@ namespace QPath
     /// </summary>
     public static class QPath
     {
-        public static IQPathTile[] FindPath(
+        public static T[] FindPath<T>( //<T> define FindPath as generic - specify object type inside angle braces (that implements IQPathTile)
             IQPathWorld world, 
             IQPathUnit unit, 
-            IQPathTile startTile, 
-            IQPathTile endTile,
+            T startTile, 
+            T endTile,
             CostEstimateDelegate costEstimateFunc
-        )
+        ) where T : IQPathTile //requires (guarentees) that whatever class T is, it implements IQPathTile
         {
             //error checking
             Debug.Log("QPath::FindPath");
@@ -41,7 +41,7 @@ namespace QPath
 
             // Call on the path solver (A* in this case)
 
-            QPath_AStar resolver = new QPath_AStar(world, unit, startTile, endTile, costEstimateFunc );
+            QPath_AStar<T> resolver = new QPath_AStar<T>(world, unit, startTile, endTile, costEstimateFunc );
 
             resolver.DoWork();
 

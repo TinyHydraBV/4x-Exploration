@@ -316,7 +316,8 @@ public class HexMap : MonoBehaviour, IQPathWorld
                 else if (h.Elevation >= flatHeight)
                 {
                     mf.mesh = MeshFlat;
-                    h.MovementCost = 1;
+                    h.MovementCost = 1.001f; //adding small amount to terrain to reduce sizgzagging in path finding and favor hills over flatland (if paths are equal)
+
                 }
                 else
                 {
