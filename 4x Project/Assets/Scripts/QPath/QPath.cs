@@ -24,9 +24,9 @@ namespace QPath
     public static class QPath
     {
         public static T[] FindPath<T>( //<T> define FindPath as generic - specify object type inside angle braces (that implements IQPathTile)
-            IQPathWorld world, 
-            IQPathUnit unit, 
-            T startTile, 
+            IQPathWorld world,
+            IQPathUnit unit,
+            T startTile,
             T endTile,
             CostEstimateDelegate costEstimateFunc
         ) where T : IQPathTile //requires (guarentees) that whatever class T is, it implements IQPathTile

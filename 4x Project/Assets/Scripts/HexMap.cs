@@ -100,6 +100,7 @@ public class HexMap : MonoBehaviour, IQPathWorld
     private Hex[,] hexes;
     //track some way to link which game objects are asigned to which hex
     private Dictionary<Hex, GameObject> hexToGameObjectMap;
+    private Dictionary<GameObject, Hex> gameObjectToHexMap;
 
     private HashSet<Unit> units;
     private Dictionary<Unit, GameObject> unitToGameObjectMap;
@@ -142,6 +143,23 @@ public class HexMap : MonoBehaviour, IQPathWorld
             Debug.LogError("GetHexAt: " + x + "," + y);
             return null;
         }
+    }
+
+    public Hex GetHexFromGameObject( GameObject hexGO)
+    {
+        if( gameObjectToHexMap.ContainsKey(hexGO))
+        {
+            return gameObjectToHexMap[hexGO];
+        }
+        return null;
+    }
+    public GameObject GetGameObjectFromHex(Hex h)
+    {
+        if (hexToGameObjectMap.ContainsKey(h))
+        {
+            return hexToGameObjectMap[h];
+        }
+        return null;
     }
 
     public Vector3 GetHexPosition(int q, int r)
@@ -190,6 +208,7 @@ public class HexMap : MonoBehaviour, IQPathWorld
         //store hexes into 2D array
         hexes = new Hex[numColumns, numRows];
         hexToGameObjectMap = new Dictionary<Hex, GameObject>();
+        gameObjectToHexMap = new Dictionary<GameObject, Hex>();
 
         //Generate Base ocean map
         //for number of columns
@@ -228,6 +247,7 @@ public class HexMap : MonoBehaviour, IQPathWorld
                 );
 
                 hexToGameObjectMap[h] = hexGO;
+                gameObjectToHexMap[hexGO] = h;
 
                 //the hex game object should know about itself and the map to pass to the HexComponent to move itself based on this info
                 hexGO.name = string.Format("HEX: {0}, {1}", column, row); // name each hex in the hierarchy with its coordinats 

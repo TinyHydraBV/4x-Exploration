@@ -8,9 +8,16 @@ public class MouseController : MonoBehaviour
     void Start()
     {
         Update_CurrentFunc = Update_DetectModeStart;
+
+        hexMap = GameObject.FindObjectOfType<HexMap>(); // TO CHECK: this may break on WipeMap() and NewMap()
+
+        lineRenderer = transform.GetComponentInChildren<LineRenderer>();
     }
 
     //Generic bookkeeping variables
+    HexMap hexMap;
+    Hex hexUnderMouse;
+    Hex lastHexUnderMouse;
     Vector3 lastMousePosition; //From Input.mousePosition
 
     //Camera dragging bookkeeping variables
@@ -28,6 +35,8 @@ public class MouseController : MonoBehaviour
 
     //Unit movement
     Unit selectedUnit = null;
+    Hex[] hexPath;
+    LineRenderer lineRenderer;
 
     delegate void UpdateFunc();
     UpdateFunc Update_CurrentFunc; //Update_CurrentFunc variable is just a pointer to a function that will run on each update frame
@@ -36,6 +45,9 @@ public class MouseController : MonoBehaviour
     
     void Update()
     {
+        hexUnderMouse = MouseToHex();
+
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             //cancel any mode you are in
@@ -51,6 +63,7 @@ public class MouseController : MonoBehaviour
 
         //where's my mouse at yo?
         lastMousePosition = Input.mousePosition;
+        lastHexUnderMouse = hexUnderMouse;
     }
 
     void CancelUpdateFunc()
@@ -59,6 +72,8 @@ public class MouseController : MonoBehaviour
         Update_CurrentFunc = Update_DetectModeStart;
 
         //Also cleanup any UI stuff associated with modes.
+
+        selectedUnit = null;
     }
 
     //Given the current context what is the correct mouse behavior?
@@ -75,8 +90,20 @@ public class MouseController : MonoBehaviour
         {
             //left click & release (no dragging, need a drag threshold to position check to avoid human error)
             Debug.Log("Mouse up - clicked yo!");
-            //TODO: Detect if clicking on a hex with a unit
+
+            //Detect if clicking on a hex with a unit
             //      If true, select it
+            Unit[] us = hexUnderMouse.Units();
+
+            //TODO: Implement cycling through multiple units in the same tile
+            if (us.Length > 0)
+            {
+                selectedUnit = us[0];
+                Update_CurrentFunc = Update_UnitMovement;
+            }
+
+            
+
         }
         else if (Input.GetMouseButton(0) && (Vector3.Distance( Input.mousePosition, lastMousePosition) > mouseDragThreshold))
         {
@@ -103,8 +130,12 @@ public class MouseController : MonoBehaviour
         if ( Physics.Raycast(mouseRay, out hitInfo, Mathf.Infinity, layerMask) )//take the mouse ray and raycast against things that are on the HexTile layer
         {
             //something got hit
-            Debug.Log(hitInfo.collider.name);
-            return null;
+            //Debug.Log(hitInfo.collider.name);
+
+            //The collider is a child of the game object that we want
+            GameObject hexGO = hitInfo.rigidbody.gameObject; //the rigid body is on the parent and we should get the parent object
+
+            return hexMap.GetHexFromGameObject(hexGO);
         }
         Debug.Log("Found nothing, this is worrisome.");
         return null;
@@ -126,15 +157,62 @@ public class MouseController : MonoBehaviour
 
     void Update_UnitMovement()
     {
-        if (Input.GetMouseButtonUp(1))
+        if (Input.GetMouseButtonUp(1) || selectedUnit == null)
         {
             Debug.Log("Complete unit movement.");
 
-            //TODO: copy pathfinding path to unit's movement queue (if that unit has movement left it will execute move immediately)
-
+            //copy pathfinding path to unit's movement queue (if that unit has movement left it will execute move immediately)
+            if(selectedUnit != null)
+            {
+                selectedUnit.SetHexPath(hexPath);
+            }
+                
             CancelUpdateFunc();
             return;
         }
+
+        //Unit selected 
+        //  Look at the hex under our mouse
+        //  Is this a different hex than before? Do we have a path?
+            //  Do pathfinding search to that hex
+            //  draw the path to that hex
+
+        if(hexUnderMouse != lastHexUnderMouse || hexPath == null)
+        {
+            //pathfinding
+            hexPath = QPath.QPath.FindPath<Hex>(
+                hexMap,
+                selectedUnit,
+                selectedUnit.Hex,
+                hexUnderMouse,
+                Hex.CostEstimate
+            );
+
+            //draw path
+            DrawPath(hexPath);
+        }
+
+    }
+
+    void DrawPath(Hex[] hexPath)
+    {
+        if(hexPath.Length == 0)
+        {
+            lineRenderer.enabled = false;
+            return;
+        }
+        lineRenderer.enabled = true;
+
+        Vector3[] positions = new Vector3[hexPath.Length];
+
+        for ( int i = 0; i < hexPath.Length; i++)
+        {
+            GameObject hexGO = hexMap.GetGameObjectFromHex(hexPath[i]);
+            positions[i] = hexGO.transform.position + (Vector3.up*0.1f);
+        }
+
+        lineRenderer.positionCount = positions.Length;
+        lineRenderer.SetPositions(positions);
     }
 
     void Update_CameraDrag()
