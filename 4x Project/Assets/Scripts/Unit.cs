@@ -64,10 +64,20 @@ public class Unit : IQPathUnit
 
     }
 
-    public void SetHexPath( Hex[] hexPath )
+    public void ClearHexPath()
     {
-        this.hexPath = new Queue<Hex>(hexPath);
-        this.hexPath.Dequeue(); //First hex is the one unit is standing in, so throw it out
+        this.hexPath = new Queue<Hex>(); //empty queue - if, for example, we want to cancel all queue movement
+    }
+
+    public void SetHexPath( Hex[] hexArray )
+    {
+        this.hexPath = new Queue<Hex>(hexArray);
+
+        //possible for hex path to be empty
+        if(hexPath.Count > 0) //because Dequeue() throws an error if hexPath is empty
+        {
+            this.hexPath.Dequeue(); //First hex is the one unit is standing in, so throw it out
+        }
     }
 
     public void DoTurn()

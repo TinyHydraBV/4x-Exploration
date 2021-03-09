@@ -294,8 +294,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.46174863, y: 0, z: 0, w: 0.8870109}
-  m_LocalPosition: {x: 0, y: 10, z: 15}
+  m_LocalRotation: {x: 0.44039086, y: 0, z: 0, w: 0.89780617}
+  m_LocalPosition: {x: -28.247618, y: 10.628821, z: 15.056786}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -505,6 +505,9 @@ MonoBehaviour:
   maxZoomIn: 2
   maxZoomOut: 20
   angleAdjustLimit: 10
+  LayerIDForHexTiles:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!4 &2116871804
 Transform:
   m_ObjectHideFlags: 0

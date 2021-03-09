@@ -32,6 +32,7 @@ public class MouseController : MonoBehaviour
     delegate void UpdateFunc();
     UpdateFunc Update_CurrentFunc; //Update_CurrentFunc variable is just a pointer to a function that will run on each update frame
 
+    public LayerMask LayerIDForHexTiles;
     
     void Update()
     {
@@ -90,6 +91,23 @@ public class MouseController : MonoBehaviour
             //      Show a path from unit to mouse position via the pathfinding system
 
         }
+    }
+
+    Hex MouseToHex()
+    {
+        Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hitInfo;
+
+        int layerMask = LayerIDForHexTiles.value;
+
+        if ( Physics.Raycast(mouseRay, out hitInfo, Mathf.Infinity, layerMask) )//take the mouse ray and raycast against things that are on the HexTile layer
+        {
+            //something got hit
+            Debug.Log(hitInfo.collider.name);
+            return null;
+        }
+        Debug.Log("Found nothing, this is worrisome.");
+        return null;
     }
 
     Vector3 MouseToGroundPlane(Vector3 mousePos)
@@ -201,7 +219,7 @@ public class MouseController : MonoBehaviour
                         );
 
                 }
-            }
+            }// angleChangeEnabled
         }
-    }
+    }// Update_ScrollZoom()
 }
